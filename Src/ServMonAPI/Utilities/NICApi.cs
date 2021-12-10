@@ -4,7 +4,7 @@ using System.Management;
 
 namespace ServMonAPI.Utilities
 {
-    internal class NICApi
+    public class NICApi
     {
         public static List<NICDevice> QueryNICDevices()
         {
@@ -71,7 +71,7 @@ namespace ServMonAPI.Utilities
                     //Thread.Sleep(1000);
                     networkInterface.Get();
                     //bytesReceivedTotal += Convert.ToUInt64(networkInterface.GetPropertyValue("BytesReceivedPerSec"));
-                    bytesReceivedTotal += MonitorNICIO(networkInterface, NICDeviceIOState.Send);
+                    bytesReceivedTotal += MonitorNICIO(networkInterface, NICDeviceIOState.SendReceive);
                     Console.WriteLine(NICDevice.FormatMemoryBytes(bytesReceivedTotal));
                 }
             }

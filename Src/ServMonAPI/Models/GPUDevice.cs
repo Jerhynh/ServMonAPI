@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ServMonAPI.Models
 {
-    internal class GPUDevice
+    public class GPUDevice
     {
-        public Dictionary<string,string> GPUDeviceProperties { get; set; }
+        public Dictionary<string,string> GPUDeviceProperties { get; private set; }
 
         public GPUDevice(Dictionary<string, string> GraphicsDeviceProperties)
         {

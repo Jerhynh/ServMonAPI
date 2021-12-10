@@ -3,7 +3,7 @@ using System.Management;
 
 namespace ServMonAPI.Utilities
 {
-    internal class CPUApi
+    public class CPUApi
     {
         public static List<CPUDevice> QueryCPUDevices()
         {

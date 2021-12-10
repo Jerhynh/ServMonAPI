@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ServMonAPI.Models
 {
-    internal class CPUDevice
+    public class CPUDevice
     {
-        public Dictionary<string,string> CPUDeviceProperties { get; set; }
+        public Dictionary<string,string> CPUDeviceProperties { get; private set; }
 
         public CPUDevice(Dictionary<string, string> ProcessorDeviceProperties)
         {

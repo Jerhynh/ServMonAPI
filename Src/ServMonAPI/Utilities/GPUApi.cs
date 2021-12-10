@@ -3,7 +3,7 @@ using System.Management;
 
 namespace ServMonAPI.Utilities
 {
-    internal class GPUApi
+    public class GPUApi
     {
         public static List<GPUDevice> QueryGPUDevices()
         {

@@ -1,8 +1,8 @@
 ﻿namespace ServMonAPI.Models
 {
-    internal class NICDevice
+    public class NICDevice
     {
-        public Dictionary<string, string> NICDeviceProperties { get; set; }
+        public Dictionary<string, string> NICDeviceProperties { get; private set; }
 
         public NICDevice(Dictionary<string, string> NICDeviceProperties)
         {
