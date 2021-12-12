@@ -7,8 +7,7 @@ namespace Program
     {
         public static void Main()
         {
-            ServMonAPI.Utilities.NICApi.ListNICs();
-            //ServMonAPI.Utilities.NICApi.MonitorNetworkIO();
+            ServMonAPI.Utilities.NICApi.GetAvaliableNICs();
         }
     }
 }

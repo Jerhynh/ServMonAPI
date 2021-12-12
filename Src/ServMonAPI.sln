@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31808.319
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServMonAPI", "ServMonAPI\ServMonAPI.csproj", "{F1FBDE45-B87B-4173-8A3D-0E88AF2C8122}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServMonTestUtil", "ServMonTestUtil\ServMonTestUtil.csproj", "{8606D452-77BE-4B44-87AA-DC62BA4A2388}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServMonTesting", "ServMonTesting\ServMonTesting.csproj", "{6CE3F0B3-2881-4E02-9B54-052469C417BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{F1FBDE45-B87B-4173-8A3D-0E88AF2C8122}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1FBDE45-B87B-4173-8A3D-0E88AF2C8122}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1FBDE45-B87B-4173-8A3D-0E88AF2C8122}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8606D452-77BE-4B44-87AA-DC62BA4A2388}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8606D452-77BE-4B44-87AA-DC62BA4A2388}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8606D452-77BE-4B44-87AA-DC62BA4A2388}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8606D452-77BE-4B44-87AA-DC62BA4A2388}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CE3F0B3-2881-4E02-9B54-052469C417BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CE3F0B3-2881-4E02-9B54-052469C417BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CE3F0B3-2881-4E02-9B54-052469C417BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CE3F0B3-2881-4E02-9B54-052469C417BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
