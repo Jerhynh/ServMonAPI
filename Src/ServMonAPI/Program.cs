@@ -51,7 +51,6 @@ namespace ServMonAPI
             //        // Query for NetConnectionID and look for adapter that has the name: NIC2
             //    }
             //}
-            NICApi.MonitorNetworkIO();
 
         }
 

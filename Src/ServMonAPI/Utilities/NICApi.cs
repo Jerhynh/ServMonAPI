@@ -30,12 +30,20 @@ namespace ServMonAPI.Utilities
             return networkDevices;
         }
 
+        /// <summary>
+        /// Must supply a monitorable NIC device, returns the IO status listed in WMI.
+        /// </summary>
+        /// <param name="networkInterface"></param>
+        /// <param name="iOState"></param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
         public static UInt64 MonitorNICIO(ManagementObject networkInterface, NICDeviceIOState iOState)
-        {
+        {   
             if (!OperatingSystem.IsWindows())
             {
                 throw new NotSupportedException("This method is not supported on the current Operating System!");
             }
+            networkInterface.Get();
             if (iOState == NICDeviceIOState.Receive)
             {
                 return Convert.ToUInt64(networkInterface.GetPropertyValue("BytesReceivedPerSec"));
@@ -72,27 +80,6 @@ namespace ServMonAPI.Utilities
                 //Console.WriteLine($"Network interface {NICIndice}: {networkInterface["Name"]}"); // Name is the mental identifier for the nic.
             }
             return NicArray;
-        }
-
-        public static void MonitorNetworkIO()
-        {
-            if (!OperatingSystem.IsWindows())
-                throw new NotSupportedException("This method is not supported on the current Operating System!");
-
-            ManagementObjectSearcher searcher = new("SELECT * FROM Win32_PerfFormattedData_Tcpip_NetworkInterface");
-            foreach (ManagementObject networkInterface in searcher.Get())
-            {
-                UInt64 bytesReceivedTotal = 0;
-                Console.WriteLine($"Starting bandwidth monitoring for inteface: {networkInterface["Name"]}");
-                for (; ; )
-                {
-                    //Thread.Sleep(1000);
-                    //networkInterface.Get();
-                    //bytesReceivedTotal += Convert.ToUInt64(networkInterface.GetPropertyValue("BytesReceivedPerSec"));
-                    bytesReceivedTotal += MonitorNICIO(networkInterface, NICDeviceIOState.SendReceive);
-                    Console.WriteLine(NICDevice.FormatMemoryBytes(bytesReceivedTotal));
-                }
-            }
         }
 
     }
