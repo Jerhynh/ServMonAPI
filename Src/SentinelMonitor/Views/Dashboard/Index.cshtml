@@ -1,0 +1,26 @@
+﻿
+@{
+    @using LibAtlas.Authentication;
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    ViewData["Title"] = "Dashboard";
+}
+
+@{
+    DateTime currentTime = DateTime.Now;
+
+            if (currentTime.Hour < 12 && currentTime.Hour >= 5)
+            {
+                <h1>Good Morning, @ViewBag.UsersName!</h1>
+            }
+            else if (currentTime.Hour >= 12)
+            {
+                <h1>Good Afternoon, @ViewBag.UsersName!</h1>
+            }
+            else
+            {
+                <h1>Good Evening, @ViewBag.UsersName!</h1>
+            }
+
+
+
+}

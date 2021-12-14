@@ -3,6 +3,7 @@ using ServMonAPI;
 using ServMonAPI.Utilities;
 using ServMonAPI.Enums;
 using ServMonAPI.Models;
+using System.Management;
 
 namespace Program
 {
@@ -10,23 +11,64 @@ namespace Program
     {
         public static void Main()
         {
-            //Console.WriteLine(CalculateBill(107374182400));
             Console.Title = "ServMon Test Utility";
             if (!OperatingSystem.IsWindows())
                 throw new NotSupportedException("This method is not supported on the current Operating System!");
 
-            var networkInterface = NICApi.GetMonitorableNICs()[0]; // Obtain the first reported monitorable NIC 
+            ManagementObject nic = QueryNIC(); // Get nic monitoring preference from the user
 
             UInt64 IOBytesTotal = 0; // Init a counter for keeping track of reported IO bytes
-            Console.WriteLine($"Starting bandwidth monitoring for inteface: {networkInterface["Name"]}");
+            Console.WriteLine($"Starting bandwidth monitoring for inteface: {nic["Name"]}");
             for (; ;)
             {
                 Task.Delay(1000).Wait();
-                var resBytes = NICApi.MonitorNICIO(networkInterface, NICDeviceIOState.SendReceive);
+                var resBytes = NICApi.MonitorNICIO(nic, NICDeviceIOState.SendReceive);
                 IOBytesTotal += resBytes;
                 Console.WriteLine($"Total Usage: {NICDevice.FormatMemoryBytes(IOBytesTotal)} Added: {NICDevice.FormatMemoryBytes(resBytes)}");
-                Console.Title = $"ServMon Test Utility | Current Session Bill: {CalculateBill(IOBytesTotal, 75):c}"; // format for currency
+                Console.Title = $"ServMon Test Utility | Status: Monitoring {nic["Name"]} | Current Session Bill: {CalculateBill(IOBytesTotal, 75):c}"; // format for currency
             }
+        }
+
+        private static ManagementObject QueryNIC()
+        {
+            if (!OperatingSystem.IsWindows())
+                throw new NotSupportedException("This method is not supported on the current Operating System!");
+            
+            Dictionary<int, ManagementObject> NICDict = new();
+            var firstLoop = true;
+            Console.Clear();
+            Console.WriteLine("Network Interfaces:");
+            while (true)
+            {
+                var indice = 0;
+                foreach (var nic in NICApi.GetMonitorableNICs())
+                {
+                    nic.Get();
+                    Console.WriteLine($"Interface {indice}: {nic["Name"]}");
+                    if (firstLoop)
+                    {
+                        NICDict.Add(indice, nic);   
+                    }
+                    indice++;
+                }
+                firstLoop = false;
+                Console.Write("Select the interface to monitor: ");
+                var NICIface = Console.ReadLine();
+                if (NICIface != null && int.TryParse(NICIface, out int NicIndice))
+                {
+                    try
+                    {
+                        return NICDict[NicIndice];
+                    }
+                    catch (KeyNotFoundException)
+                    {
+                        Console.WriteLine("Please enter a valid NIC number! (Press any key to continue...)");
+                        Console.ReadLine();
+                    }
+                }
+                // Nic not found query again for nic selection.
+            }
+
         }
 
         /// <summary>
