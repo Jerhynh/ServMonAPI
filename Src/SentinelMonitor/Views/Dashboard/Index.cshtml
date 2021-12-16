@@ -5,22 +5,67 @@
     ViewData["Title"] = "Dashboard";
 }
 
-@{
+@{ // User greeting...
     DateTime currentTime = DateTime.Now;
-
-            if (currentTime.Hour < 12 && currentTime.Hour >= 5)
-            {
-                <h1>Good Morning, @ViewBag.UsersName!</h1>
-            }
-            else if (currentTime.Hour >= 12)
-            {
-                <h1>Good Afternoon, @ViewBag.UsersName!</h1>
-            }
-            else
-            {
-                <h1>Good Evening, @ViewBag.UsersName!</h1>
-            }
-
-
-
+    if (currentTime.Hour < 12)
+    {
+        <h1>Good Morning, @ViewBag.UsersName!</h1>
+    }
+    else if (currentTime.Hour >= 12 && currentTime.Hour < 17)
+    {
+        <h1>Good Afternoon, @ViewBag.UsersName!</h1>
+    }
+    else
+    {
+        <h1>Good Evening, @ViewBag.UsersName!</h1>
+    }
 }
+
+<div class="mt-md-5" id="AccountManagementArea">
+    <div class="card-columns"> <!--Optionally set to row class-->
+
+      <div class="col-sm-4 m-auto">
+        <div class="card text-white bg-dark">
+          <div class="card-body">
+            <h5 class="card-title">Billing</h5>
+            <hr/>
+            <p class="card-text">Current billing period </p> <!--Show current month cycle-->
+            <p class="card-text">Account Balance </p> <!--Show current user's balance-->
+            <p class="card-text">Amount Due </p> <!--Show current user's owed balance-->
+            <p class="card-text">Data usage </p> <!--Show current month data usage-->
+            <!--Progress bar examples, will be dynamic later on.-->
+            <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+            </div>
+            <!--
+            <div class="progress">
+                <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%</div>
+            </div>
+            <div class="progress">
+                <div class="progress-bar bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">100%</div>
+            </div>
+            <div class="progress">
+                <div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">100%</div>
+            </div>
+            -->
+            <br />
+            <a href="#" class="btn btn-primary mt-md-3">More info</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-4 m-auto">
+        <div class="card text-white bg-dark">
+          <div class="card-body">
+            <h5 class="card-title">Account</h5>
+            <hr/>
+            <p class="card-text">Account Number </p> <!--Populate with user's account number-->
+            <p class="card-text">Email Address </p> <!--Populate with user's email address-->
+            <p class="card-text">Phone Number </p> <!--Populate with user's phone number-->
+            <a href="#" class="btn btn-primary mt-md-3">Manage Account</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+</div>

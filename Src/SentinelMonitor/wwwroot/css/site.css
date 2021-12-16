@@ -25,7 +25,10 @@ a {
     color: #FFFFFF;
 }
 
-
+.card-columns {
+    display: inline-block;
+    display: flex;
+}
 
 #particles-js canvas {
     display: block;
