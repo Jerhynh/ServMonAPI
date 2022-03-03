@@ -8,11 +8,6 @@ namespace ServMonAPI.Utilities
     {
         public static List<NICDevice> QueryNICDevices()
         {
-            if (!OperatingSystem.IsWindows())
-            {
-                throw new NotSupportedException("This method is not supported on the current Operating System!");
-            }
-
             List<NICDevice> networkDevices = new();
             using (var searcher = new ManagementObjectSearcher("select * from Win32_NetworkAdapter"))
             {
@@ -39,10 +34,6 @@ namespace ServMonAPI.Utilities
         /// <exception cref="NotSupportedException"></exception>
         public static UInt64 MonitorNICIO(ManagementObject networkInterface, NICDeviceIOState iOState)
         {   
-            if (!OperatingSystem.IsWindows())
-            {
-                throw new NotSupportedException("This method is not supported on the current Operating System!");
-            }
             networkInterface.Get();
             if (iOState == NICDeviceIOState.Receive)
             {
@@ -69,9 +60,6 @@ namespace ServMonAPI.Utilities
         /// <exception cref="NotSupportedException"></exception>
         public static List<ManagementObject> GetMonitorableNICs()
         {
-            if (!OperatingSystem.IsWindows())
-                throw new NotSupportedException("This method is not supported on the current Operating System!");
-
             ManagementObjectSearcher searcher = new("SELECT * FROM Win32_PerfFormattedData_Tcpip_NetworkInterface");
             List<ManagementObject> NicArray = new();
             foreach (ManagementObject networkInterface in searcher.Get())

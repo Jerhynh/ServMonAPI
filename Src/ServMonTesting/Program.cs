@@ -12,8 +12,6 @@ namespace Program
         public static void Main()
         {
             Console.Title = "ServMon Test Utility";
-            if (!OperatingSystem.IsWindows())
-                throw new NotSupportedException("This method is not supported on the current Operating System!");
 
             ManagementObject nic = QueryNIC(); // Get nic monitoring preference from the user
 
@@ -30,10 +28,7 @@ namespace Program
         }
 
         private static ManagementObject QueryNIC()
-        {
-            if (!OperatingSystem.IsWindows())
-                throw new NotSupportedException("This method is not supported on the current Operating System!");
-            
+        {   
             Dictionary<int, ManagementObject> NICDict = new();
             var firstLoop = true;
             Console.Clear();
@@ -68,7 +63,6 @@ namespace Program
                 }
                 // Nic not found query again for nic selection.
             }
-
         }
 
         /// <summary>
