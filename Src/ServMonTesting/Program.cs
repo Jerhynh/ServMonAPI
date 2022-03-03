@@ -1,8 +1,6 @@
-﻿using System;
-using ServMonAPI;
-using ServMonAPI.Utilities;
-using ServMonAPI.Enums;
+﻿using ServMonAPI.Enums;
 using ServMonAPI.Models;
+using ServMonAPI.Utilities;
 using System.Management;
 
 namespace Program
@@ -12,28 +10,22 @@ namespace Program
         public static void Main()
         {
             Console.Title = "ServMon Test Utility";
-            if (!OperatingSystem.IsWindows())
-                throw new NotSupportedException("This method is not supported on the current Operating System!");
 
             ManagementObject nic = QueryNIC(); // Get nic monitoring preference from the user
-
             UInt64 IOBytesTotal = 0; // Init a counter for keeping track of reported IO bytes
             Console.WriteLine($"Starting bandwidth monitoring for inteface: {nic["Name"]}");
-            for (; ;)
+            for (; ; )
             {
                 Task.Delay(1000).Wait();
                 var resBytes = NICApi.MonitorNICIO(nic, NICDeviceIOState.SendReceive);
                 IOBytesTotal += resBytes;
-                Console.WriteLine($"Total Usage: {NICDevice.FormatMemoryBytes(IOBytesTotal)} Added: {NICDevice.FormatMemoryBytes(resBytes)}");
+                Console.WriteLine($"Total Usage: {DataFormatting.FormatMemoryBytes(IOBytesTotal)} Added: {DataFormatting.FormatMemoryBytes(resBytes)}");
                 Console.Title = $"ServMon Test Utility | Status: Monitoring {nic["Name"]} | Current Session Bill: {CalculateBill(IOBytesTotal, 75):c}"; // format for currency
             }
         }
 
         private static ManagementObject QueryNIC()
         {
-            if (!OperatingSystem.IsWindows())
-                throw new NotSupportedException("This method is not supported on the current Operating System!");
-            
             Dictionary<int, ManagementObject> NICDict = new();
             var firstLoop = true;
             Console.Clear();
@@ -47,7 +39,7 @@ namespace Program
                     Console.WriteLine($"Interface {indice}: {nic["Name"]}");
                     if (firstLoop)
                     {
-                        NICDict.Add(indice, nic);   
+                        NICDict.Add(indice, nic);
                     }
                     indice++;
                 }
@@ -68,7 +60,6 @@ namespace Program
                 }
                 // Nic not found query again for nic selection.
             }
-
         }
 
         /// <summary>
