@@ -3,8 +3,15 @@ using System.Management;
 
 namespace ServMonAPI.Utilities
 {
+    /// <summary>
+    /// A class that contains useful methods for obtaining information about attached CPU devices.
+    /// </summary>
     public class CPUApi
     {
+        /// <summary>
+        /// Queries WMI to obtain a list of all attacted CPU devices.
+        /// </summary>
+        /// <returns>Returns a list of all attached CPUDevices represented by CPUDevice objects.</returns>
         public static List<CPUDevice> QueryCPUDevices()
         {                
             List<CPUDevice> Processors = new();

@@ -3,8 +3,15 @@ using System.Management;
 
 namespace ServMonAPI.Utilities
 {
+    /// <summary>
+    /// A class that contains useful methods for obtaining information about attached GPU devices.
+    /// </summary>
     public class GPUApi
     {
+        /// <summary>
+        /// Queries WMI to obtain a list of all attacted GPU devices.
+        /// </summary>
+        /// <returns>Returns a list of all attached GPUDevices represented by GPUDevice objects.</returns>
         public static List<GPUDevice> QueryGPUDevices()
         {
             List<GPUDevice> graphicsDevices = new();
@@ -24,7 +31,11 @@ namespace ServMonAPI.Utilities
             return graphicsDevices;
         }
 
-        public static void PrintGPUInfo()
+        /// <summary>
+        /// Prints to the console (if exists) information about each attached GPU device.
+        /// </summary>
+        [Obsolete("This method is planned to be removed in the future from the base library. It is reccomended to get all future values from QueryGPUDevices().")]
+        public static void PrintGPUInfo() // Note this class is planned to be removed in the future from the base dll.
         {
             using var searcher = new ManagementObjectSearcher("select * from Win32_VideoController");
             foreach (ManagementObject obj in searcher.Get())

@@ -4,8 +4,15 @@ using System.Management;
 
 namespace ServMonAPI.Utilities
 {
+    /// <summary>
+    /// A class that contains useful methods for obtaining information about attached NIC devices.
+    /// </summary>
     public class NICApi
     {
+        /// <summary>
+        /// Queries WMI to obtain a list of all attacted NIC devices.
+        /// </summary>
+        /// <returns>Returns a list of all attached NICDevices represented by NICDevice objects.</returns>
         public static List<NICDevice> QueryNICDevices()
         {
             List<NICDevice> networkDevices = new();
@@ -30,9 +37,8 @@ namespace ServMonAPI.Utilities
         /// </summary>
         /// <param name="networkInterface"></param>
         /// <param name="iOState"></param>
-        /// <returns></returns>
-        /// <exception cref="NotSupportedException"></exception>
-        public static UInt64 MonitorNICIO(ManagementObject networkInterface, NICDeviceIOState iOState)
+        /// <returns>Returns a UInt64 representing the IO state of the specified NIC.</returns>
+        public static ulong MonitorNICIO(ManagementObject networkInterface, NICDeviceIOState iOState)
         {   
             networkInterface.Get();
             if (iOState == NICDeviceIOState.Receive)
@@ -56,8 +62,7 @@ namespace ServMonAPI.Utilities
         /// <summary>
         /// Returns all NIC devices made avaliable under the Win32_PerfFormattedData_Tcpip_NetworkInterface query with corresponding objects in a List.
         /// </summary>
-        /// <returns>List<ManagementObject> containing corresponding object for each detected NIC.</returns>
-        /// <exception cref="NotSupportedException"></exception>
+        /// <returns>Returns ManagementObject list containing corresponding object for each detected NIC.</returns>
         public static List<ManagementObject> GetMonitorableNICs()
         {
             ManagementObjectSearcher searcher = new("SELECT * FROM Win32_PerfFormattedData_Tcpip_NetworkInterface");
