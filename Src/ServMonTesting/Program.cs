@@ -1,5 +1,4 @@
-﻿using ServMonAPI.Enums;
-using ServMonAPI.Models;
+﻿using Microsoft.Data.Sqlite;
 using ServMonAPI.Utilities;
 using System.Management;
 
@@ -7,22 +6,26 @@ namespace Program
 {
     public class Program
     {
-        public static void Main()
-        {
-            Console.Title = "ServMon Test Utility";
+        //public static void Main()
+        //{
+        //    Console.Title = "Ingress & Egress Traffic Mon Util | Starting up...";
 
-            ManagementObject nic = QueryNIC(); // Get nic monitoring preference from the user
-            UInt64 IOBytesTotal = 0; // Init a counter for keeping track of reported IO bytes
-            Console.WriteLine($"Starting bandwidth monitoring for inteface: {nic["Name"]}");
-            for (; ; )
-            {
-                Task.Delay(1000).Wait();
-                var resBytes = NICApi.MonitorNICIO(nic, NICDeviceIOState.SendReceive);
-                IOBytesTotal += resBytes;
-                Console.WriteLine($"Total Usage: {DataFormatting.FormatMemoryBytes(IOBytesTotal)} Added: {DataFormatting.FormatMemoryBytes(resBytes)}");
-                Console.Title = $"ServMon Test Utility | Status: Monitoring {nic["Name"]} | Current Session Bill: {CalculateBill(IOBytesTotal, 75):c}"; // format for currency
-            }
-        }
+        //    ManagementObject nic = QueryNIC(); // Get nic monitoring preference from the user
+        //    UInt64 totalIngress = 0; // Init a counter for keeping track of reported IO bytes
+        //    UInt64 totalEgress = 0; // Init a counter for keeping track of reported IO bytes
+        //    Console.WriteLine($"Starting bandwidth monitoring for inteface: {nic["Name"]}");
+        //    for (; ; )
+        //    {
+        //        Task.Delay(1000).Wait();
+        //        var ingressBytes = NICApi.MonitorNICIO(nic, NICDeviceTrafficType.Ingress); // Optionally run both in a separate threads.
+        //        var egressBytes = NICApi.MonitorNICIO(nic, NICDeviceTrafficType.Egress);
+        //        totalIngress += ingressBytes;
+        //        totalEgress += egressBytes;
+        //        Console.WriteLine($"Ingress Increase:{DataFormatting.FormatMemoryBytes(ingressBytes)} <---> Egress Increase:{DataFormatting.FormatMemoryBytes(egressBytes)}");
+        //        Console.Title = $"Ingress & Egress Traffic Mon Util | Status: Monitoring {nic["Name"]} | Total Usage: {DataFormatting.FormatMemoryBytes(totalIngress + totalEgress)} - Ingress:{DataFormatting.FormatMemoryBytes(totalIngress)} Egress:{DataFormatting.FormatMemoryBytes(totalEgress)}"; // format for currency
+        //        //Console.Title = $"ServMon Test Utility | Status: Monitoring {nic["Name"]} | Current Session Bill: {CalculateBill(IOBytesTotal, 75):c}"; // format for currency
+        //    }
+        //}
 
         private static ManagementObject QueryNIC()
         {
@@ -92,6 +95,76 @@ namespace Program
                 return flatRate;
             }
             return 0.00;
+        }
+
+        static void Main(string[] args)
+        {
+            File.Delete("Application.db");
+            SqliteConnection sqlite_conn;
+            sqlite_conn = CreateConnection();
+            CreateTable(sqlite_conn);
+            InsertData(sqlite_conn);
+            ReadData(sqlite_conn);
+        }
+
+        static SqliteConnection CreateConnection()
+        {
+
+            SqliteConnection sqlite_conn;
+            // Create a new database connection:
+            sqlite_conn = new SqliteConnection("Data Source=Application.db;Cache=Shared");
+            // Open the connection:
+            try
+            {
+                sqlite_conn.Open();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return sqlite_conn;
+        }
+
+        static void CreateTable(SqliteConnection conn)
+        {
+
+            SqliteCommand sqlite_cmd;
+            string Createsql = "CREATE TABLE DataUsage(txID varchar(40) primary key, DateTime varchar(50),Ingress varchar(25), Egress varchar(25));";
+            sqlite_cmd = conn.CreateCommand();
+            sqlite_cmd.CommandText = Createsql;
+            sqlite_cmd.ExecuteNonQuery();
+        }
+
+        static void InsertData(SqliteConnection conn)
+        {
+            SqliteCommand sqlite_cmd;
+            sqlite_cmd = conn.CreateCommand();
+            sqlite_cmd.CommandText = "INSERT INTO DataUsage(txID, DateTime, Ingress, Egress) VALUES(@txID, @DateTime, @Ingress, @Egress);";
+            sqlite_cmd.Parameters.AddWithValue("@txID", Guid.NewGuid().ToString());
+            sqlite_cmd.Parameters.AddWithValue("@DateTime", DateTime.Today.Date.ToString());
+            sqlite_cmd.Parameters.AddWithValue("@Ingress", 1000);
+            sqlite_cmd.Parameters.AddWithValue("@Egress", 2000);
+            sqlite_cmd.ExecuteNonQuery();
+        }
+
+        static void ReadData(SqliteConnection conn)
+        {
+            SqliteDataReader sqlite_datareader;
+            SqliteCommand sqlite_cmd;
+            sqlite_cmd = conn.CreateCommand();
+            sqlite_cmd.CommandText = "SELECT * FROM DataUsage";
+
+            sqlite_datareader = sqlite_cmd.ExecuteReader();
+            while (sqlite_datareader.Read())
+            {
+                int fieldCount = sqlite_datareader.FieldCount;
+                for (int i = 0; i < fieldCount; i++)
+                {
+                    string myreader = sqlite_datareader.GetString(i);
+                    Console.WriteLine(myreader);
+                }
+            }
+            conn.Close();
         }
     }
 }

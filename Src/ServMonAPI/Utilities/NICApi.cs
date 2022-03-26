@@ -38,18 +38,18 @@ namespace ServMonAPI.Utilities
         /// <param name="networkInterface"></param>
         /// <param name="iOState"></param>
         /// <returns>Returns a UInt64 representing the IO state of the specified NIC.</returns>
-        public static ulong MonitorNICIO(ManagementObject networkInterface, NICDeviceIOState iOState)
+        public static ulong MonitorNICIO(ManagementObject networkInterface, NICDeviceTrafficType iOState)
         {   
             networkInterface.Get();
-            if (iOState == NICDeviceIOState.Receive)
+            if (iOState == NICDeviceTrafficType.Ingress)
             {
                 return Convert.ToUInt64(networkInterface.GetPropertyValue("BytesReceivedPerSec"));
             }
-            else if (iOState == NICDeviceIOState.Send)
+            else if (iOState == NICDeviceTrafficType.Egress)
             {
                 return Convert.ToUInt64(networkInterface.GetPropertyValue("BytesSentPersec"));
             }
-            else if (iOState == NICDeviceIOState.SendReceive)
+            else if (iOState == NICDeviceTrafficType.IngressEgress)
             {
                 return Convert.ToUInt64(networkInterface.GetPropertyValue("BytesTotalPersec"));
             }

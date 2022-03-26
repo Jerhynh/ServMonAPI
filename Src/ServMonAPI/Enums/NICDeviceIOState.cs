@@ -3,21 +3,21 @@
     /// <summary>
     /// Enum containing the three listening states for a NICDevice when transmitting IO.
     /// </summary>
-    public enum NICDeviceIOState
+    public enum NICDeviceTrafficType
     {
         /// <summary>
         /// Only monitor sent packets.
         /// </summary>
-        Send,
+        Egress,
 
         /// <summary>
         /// Only monitor received packets.
         /// </summary>
-        Receive,
+        Ingress,
 
         /// <summary>
         /// Monitor sent and received packets.
         /// </summary>
-        SendReceive,
+        IngressEgress,
     }
 }
