@@ -1,45 +1,50 @@
 ﻿using Microsoft.Data.Sqlite;
+using ServMonAPI.Enums;
 using ServMonAPI.Utilities;
 using System.Management;
+using System.Net.NetworkInformation;
+
 
 namespace Program
 {
     public class Program
     {
-        //public static void Main()
-        //{
-        //    Console.Title = "Ingress & Egress Traffic Mon Util | Starting up...";
-
-        //    ManagementObject nic = QueryNIC(); // Get nic monitoring preference from the user
-        //    UInt64 totalIngress = 0; // Init a counter for keeping track of reported IO bytes
-        //    UInt64 totalEgress = 0; // Init a counter for keeping track of reported IO bytes
-        //    Console.WriteLine($"Starting bandwidth monitoring for inteface: {nic["Name"]}");
-        //    for (; ; )
-        //    {
-        //        Task.Delay(1000).Wait();
-        //        var ingressBytes = NICApi.MonitorNICIO(nic, NICDeviceTrafficType.Ingress); // Optionally run both in a separate threads.
-        //        var egressBytes = NICApi.MonitorNICIO(nic, NICDeviceTrafficType.Egress);
-        //        totalIngress += ingressBytes;
-        //        totalEgress += egressBytes;
-        //        Console.WriteLine($"Ingress Increase:{DataFormatting.FormatMemoryBytes(ingressBytes)} <---> Egress Increase:{DataFormatting.FormatMemoryBytes(egressBytes)}");
-        //        Console.Title = $"Ingress & Egress Traffic Mon Util | Status: Monitoring {nic["Name"]} | Total Usage: {DataFormatting.FormatMemoryBytes(totalIngress + totalEgress)} - Ingress:{DataFormatting.FormatMemoryBytes(totalIngress)} Egress:{DataFormatting.FormatMemoryBytes(totalEgress)}"; // format for currency
-        //        //Console.Title = $"ServMon Test Utility | Status: Monitoring {nic["Name"]} | Current Session Bill: {CalculateBill(IOBytesTotal, 75):c}"; // format for currency
-        //    }
-        //}
-
-        private static ManagementObject QueryNIC()
+        public static void Main()
         {
-            Dictionary<int, ManagementObject> NICDict = new();
+            Console.Title = "Ingress & Egress Traffic Mon Util | Starting up...";
+
+            NetworkInterface nic = QueryNIC(); // Get nic monitoring preference from the user
+            long totalIngress = 0; // Init a counter for keeping track of reported IO bytes
+            long totalEgress = 0; // Init a counter for keeping track of reported IO bytes
+            Console.WriteLine($"Starting bandwidth monitoring for inteface: {nic.Name}");
+            for (; ; )
+            {
+                Task.Delay(1000).Wait();
+                //var ingressBytes = NICApi.MonitorNICIO(nic, NICDeviceTrafficType.Ingress); // Optionally run both in a separate threads.
+                //var egressBytes = NICApi.MonitorNICIO(nic, NICDeviceTrafficType.Egress);
+                var ingressBytes = 0; // pull network sent, wait some time and calculate the change. <<<<<*************************************************
+                var egressBytes = 0; 
+                totalIngress += ingressBytes;
+                totalEgress += egressBytes;
+                Console.WriteLine($"Ingress Increase:{DataFormatting.FormatMemoryBytes(ingressBytes)} <---> Egress Increase:{DataFormatting.FormatMemoryBytes(egressBytes)}");
+                Console.Title = $"Ingress & Egress Traffic Mon Util | Status: Monitoring {nic.Name} | Total Usage: {DataFormatting.FormatMemoryBytes(totalIngress + totalEgress)} - Ingress:{DataFormatting.FormatMemoryBytes(totalIngress)} Egress:{DataFormatting.FormatMemoryBytes(totalEgress)}"; // format for currency
+                //Console.Title = $"ServMon Test Utility | Status: Monitoring {nic["Name"]} | Current Session Bill: {CalculateBill(IOBytesTotal, 75):c}"; // format for currency
+            }
+        }
+
+        private static NetworkInterface QueryNIC()
+        {
+            Dictionary<int, NetworkInterface> NICDict = new();
             var firstLoop = true;
             Console.Clear();
             Console.WriteLine("Network Interfaces:");
+            IEnumerable<NetworkInterface> networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
             while (true)
             {
                 var indice = 0;
-                foreach (var nic in NICApi.GetMonitorableNICs())
+                foreach (var nic in networkInterfaces) // NICApi.GetMonitorableNICs()
                 {
-                    nic.Get();
-                    Console.WriteLine($"Interface {indice}: {nic["Name"]}");
+                    Console.WriteLine($"Interface {indice}: {nic.Name}");
                     if (firstLoop)
                     {
                         NICDict.Add(indice, nic);
@@ -97,15 +102,15 @@ namespace Program
             return 0.00;
         }
 
-        static void Main(string[] args)
-        {
-            File.Delete("Application.db");
-            SqliteConnection sqlite_conn;
-            sqlite_conn = CreateConnection();
-            CreateTable(sqlite_conn);
-            InsertData(sqlite_conn);
-            ReadData(sqlite_conn);
-        }
+        //static void Main(string[] args)
+        //{
+        //    File.Delete("Application.db");
+        //    SqliteConnection sqlite_conn;
+        //    sqlite_conn = CreateConnection();
+        //    CreateTable(sqlite_conn);
+        //    InsertData(sqlite_conn);
+        //    ReadData(sqlite_conn);
+        //}
 
         static SqliteConnection CreateConnection()
         {
